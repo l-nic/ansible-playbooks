@@ -1,0 +1,12 @@
+---
+
+- name: provision hosts
+  hosts: su-*
+  gather_facts: true
+  become: true
+
+  vars_files:
+    - "vars/firesim.yml"
+
+  roles:
+    - firesim

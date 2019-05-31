@@ -1,7 +1,7 @@
 ---
 
 - name: ping all hosts
-  hosts: su-*
+  hosts: su_*
   gather_facts: true
 
   tasks:

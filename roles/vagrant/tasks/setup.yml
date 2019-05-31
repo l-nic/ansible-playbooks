@@ -1,0 +1,61 @@
+---
+
+- name: Create a 'vagrant_{{ vagrant.name }}' directory
+  file:
+    path: "{{ PWD }}/vagrant_{{ vagrant.name }}"
+    state: directory
+
+- name: Upload Vagrantfile to 'vagrant_{{ vagrant.name }}' directory
+  template:
+    src: roles/vagrant/templates/Vagrantfile
+    dest: "{{ PWD }}/vagrant_{{ vagrant.name }}"
+
+- name: Bring up 'vagrant_{{ vagrant.name }}' VM
+  shell: cd "{{ PWD }}/vagrant_{{ vagrant.name }}";
+         vagrant up
+
+- name: Create local hidden 'vagrant_{{ vagrant.name }}' directory
+  file:
+    path: ".vagrant_{{ vagrant.name }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Fetch private_key for 'vagrant_{{ vagrant.name }}'
+  fetch:
+    src: "{{ PWD }}/vagrant_{{ vagrant.name }}/.vagrant/machines/vagrant_{{ vagrant.name }}/virtualbox/private_key"
+    dest: ".vagrant_{{ vagrant.name }}/"
+    flat: yes
+
+- name: Change private_key permissions
+  file:
+    path: ".vagrant_{{ vagrant.name }}/private_key"
+    mode: '0600'
+  delegate_to: localhost
+
+- name: Get 'vagrant_{{ vagrant.name }}' ssh-config
+  shell: cd "{{ PWD }}/vagrant_{{ vagrant.name }}";
+         vagrant ssh-config
+  register: ssh_config
+
+- name: Insert 'vagrant_{{ vagrant.name }}' ssh-config to local ssh.cfg
+  blockinfile:
+    path: ./ssh.cfg
+    block: |
+      {{ ssh_config.stdout }}
+        ProxyCommand ssh -F ./ssh.cfg {{ ansible_ssh_user }}@su_ottawa -W %h:%p
+  delegate_to: localhost
+
+- name: Update 'vagrant_{{ vagrant.name }}' private key
+  lineinfile:
+    path: ./ssh.cfg
+    regexp: '^  IdentityFile'
+    line: '  IdentityFile ".vagrant_{{ vagrant.name }}/private_key"'
+  delegate_to: localhost
+
+- name: Insert 'vagrant_{{ vagrant.name }}' VM to local inventory.ini
+  blockinfile:
+    path: ./inventory.ini
+    block: |
+      [vagrant_vms]
+      vagrant_{{ vagrant.name }}
+  delegate_to: localhost

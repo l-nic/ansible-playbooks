@@ -1,0 +1,16 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "vagrant_{{ vagrant.name }}" do |vagrant_{{ vagrant.name }}|
+
+    vagrant_{{ vagrant.name }}.vm.box = "{{ vagrant.vm.box }}"
+
+    vagrant_{{ vagrant.name }}.vm.provider "virtualbox" do |virtualbox|
+      virtualbox.memory = "{{ vagrant.vm.memory }}"
+      virtualbox.cpus = "{{ vagrant.vm.cpus }}"
+    end
+
+  end
+end

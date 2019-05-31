@@ -1,0 +1,34 @@
+---
+
+- name: Remove 'vagrant_{{ vagrant.name }}' VM from local inventory.ini
+  blockinfile:
+    path: ./inventory.ini
+    state: absent
+  delegate_to: localhost
+
+- name: Remove 'vagrant_{{ vagrant.name }}' ssh-config from local ssh.cfg
+  blockinfile:
+    path: ./ssh.cfg
+    state: absent
+  delegate_to: localhost
+
+- name: Remove local hidden 'vagrant_{{ vagrant.name }}' directory
+  file:
+    path: ".vagrant_{{ vagrant.name }}/"
+    state: absent
+  delegate_to: localhost
+
+- name: Bring down 'vagrant_{{ vagrant.name }}' VM
+  shell: cd "{{ PWD }}/vagrant_{{ vagrant.name }}";
+         vagrant halt;
+         vagrant destroy -f
+
+- name: Delete Vagrantfile from 'vagrant_{{ vagrant.name }}' directory
+  file:
+    path: "{{ PWD }}/vagrant_{{ vagrant.name }}/Vagrantfile"
+    state: absent
+
+- name: Delete 'vagrant_{{ vagrant.name }}' directory
+  file:
+    path: "{{ PWD }}/vagrant_{{ vagrant.name }}"
+    state: absent

@@ -1,0 +1,8 @@
+---
+
+vagrant:
+  name: firesim
+  vm:
+    box: ubuntu/trusty64
+    memory: 2048
+    cpus: 4

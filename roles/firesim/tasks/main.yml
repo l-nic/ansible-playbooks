@@ -1,6 +1,6 @@
 ---
 
-- name: update cache
+- name: Update cache
   apt:
     update_cache: yes
   ignore_errors: yes

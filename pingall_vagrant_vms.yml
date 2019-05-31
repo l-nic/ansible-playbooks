@@ -1,0 +1,9 @@
+---
+
+- name: ping all vagrant vms
+  hosts: vagrant_*
+  gather_facts: true
+
+  tasks:
+  - name: ping all vagrant vms
+    ping:

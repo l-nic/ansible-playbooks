@@ -12,3 +12,18 @@ From within the VM, run:
 $ cd /vagrant
 $ ansible-playbook pingall-hosts.yml --extra-vars "ansible_ssh_user=XXX ansible_ssh_pass=XXX ansible_sudo_pass=ZZZ"
 ```
+
+#### Setup/Cleanup
+
+For global setup and cleanup, run the following commands:
+
+```bash
+$ ./setup.sh 'username' 'password'
+``` 
+
+or 
+
+```bash
+$ ./cleanup.sh 'username' 'password'
+``` 
+

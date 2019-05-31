@@ -1,0 +1,21 @@
+---
+
+- name: Check if vagrant is installed
+  shell: vagrant --version
+  tags: setup_vagrant, cleanup_vagrant
+
+- name: Get present working directory
+  set_fact:
+    PWD: "{{ hostvars[inventory_hostname]['ansible_env']['PWD'] }}"
+  tags: setup_vagrant, cleanup_vagrant
+
+#- debug: msg={{ hostvars[inventory_hostname]['ansible_env']['PWD'] }}
+#- local_action: copy content={{ hostvars[inventory_hostname]['ansible_env'] }} dest=./tmp.out
+
+- name: setup vagrant
+  include: roles/vagrant/tasks/setup.yml
+  tags: setup_vagrant
+
+- name: cleanup vagrant
+  include: roles/vagrant/tasks/cleanup.yml
+  tags: cleanup_vagrant

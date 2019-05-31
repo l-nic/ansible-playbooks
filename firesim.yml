@@ -1,7 +1,7 @@
 ---
 
-- name: provision hosts
-  hosts: su-*
+- name: provision vagrant firesim VM
+  hosts: vagrant_firesim
   gather_facts: true
   become: true
 
